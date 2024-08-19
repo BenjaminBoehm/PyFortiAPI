@@ -5,9 +5,9 @@ __license__ = "MIT"
 __version__ = "0.3.0"
 
 
-import requests
 import logging
 
+import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 
@@ -52,7 +52,7 @@ class FortiGate:
                 session.headers.update({'X-CSRFTOKEN': csrftoken})
 
         # Check whether login was successful
-        login_check = session.get(self.urlbase + "api/v2/cmdb/system/vdom")
+        login_check = session.get(self.urlbase + "api/v2/cmdb/system/vdom", verify=self.verify)
         login_check.raise_for_status()
         return session
 
@@ -471,14 +471,14 @@ class FortiGate:
         """
         api_url = self.urlbase + "api/v2/cmdb/firewall/policy/"
         if specific:
-            if type(specific) == int:
+            if type(specific) is int:
                 api_url += str(specific)
             else:
                 api_url += "?filter=name==" + specific
         elif filters:
             api_url += "?filter=" + filters
         results = self.get(api_url)
-        if type(results) == int:
+        if type(results) is int:
             return results
         elif len(results) == 0:
             return 404
@@ -559,7 +559,7 @@ class FortiGate:
         """
         api_url = self.urlbase + "api/v2/cmdb/system.snmp/community/"
         if specific:
-            if type(specific) == int:
+            if type(specific) is int:
                 api_url += str(specific)
             else:
                 api_url += "?filter=name==" + specific
